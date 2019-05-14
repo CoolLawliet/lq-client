@@ -1,6 +1,12 @@
 //ajax请求函数模块
 //返回值：promise对象(异步返回的数据是：response.data)
-import axios from 'axios'
+// import axios from 'axios'
+import axios from '../http'
+import Vue from 'vue'
+
+Vue.prototype.$axios = axios
+
+
 export default function ajax(url = '', data = {}, type = 'GET') {
   return new Promise(function (resolve, reject) {
     let promise
@@ -14,11 +20,15 @@ export default function ajax(url = '', data = {}, type = 'GET') {
         dataStr = dataStr.substring(0, dataStr.lastIndexOf('&'))
         url = url + '?' + dataStr
       }
+
 // 发送 get 请求
       promise = axios.get(url)
     } else {
 // 发送 post 请求
       promise = axios.post(url, data,{
+
+
+
         responseType:'json',
         withCredentials:true
       })

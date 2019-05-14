@@ -12,6 +12,12 @@
       </span>
       <span>动态</span>
     </a>
+    <a href="javascript:;" class="guide_item" :class="{on:'/publish'===$route.path}" @click="goTo('/publish')">
+      <span class="item_icon">
+        <i class="iconfont icon-roundadd" style="font-size: 33px"></i>
+      </span>
+      <span></span>
+    </a>
     <a href="javascript:;" class="guide_item" :class="{on:'/circle'===$route.path}" @click="goTo('/circle')">
       <span class="item_icon">
         <i class="iconfont icon-zhinengyouhua"></i>

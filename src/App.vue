@@ -1,14 +1,23 @@
 <template>
   <div id="app">
   <router-view/>
-    <FooterGuide/>
+    <FooterGuide v-show="$route.meta.showFooter"/>
   </div>
 </template>
 
 <script>
   import FooterGuide from './components/FooterGuide/FooterGuide.vue'
+   import {mapActions} from 'vuex'
 
   export default {
+    mounted(){
+      this.getUserInfo()
+    },
+
+    methods:{
+      ...mapActions([ 'getUserInfo'])
+    },
+
     components:{
       FooterGuide
     }

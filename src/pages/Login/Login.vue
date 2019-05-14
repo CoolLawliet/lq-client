@@ -110,10 +110,14 @@
         if (result.message==='ok'){
         const user=result.data
           console.log(user)
+
+          //存储token
+          localStorage.userID=user.id
+          localStorage.token=user.token;
           //将user保存到vuex的state
           this.$store.dispatch('recordUser',user)
           //去个人中心界面
-          this.$router.replace('/profile')
+          this.$router.push('/msite')
       } else {
           //显示新的图片验证码
           this.getCaptcha()
@@ -132,6 +136,7 @@
       //获取一个新的图片验证码
       getCaptcha(){
         //每次指定的src要不一样
+        // TODO
         this.$refs.captcha.src='http://server.nsloop.com:17882/users?time='+Date.now()
       }
     },

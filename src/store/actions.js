@@ -2,12 +2,12 @@
 通过mutation间接更新state的多个方法的对象
  */
 import {
-  RECEIVE_USER_INFO,RECEIVE_WORLD
+  RECEIVE_USER_INFO, RECEIVE_WORLD
 } from './mutation-types'
- import {
+import {
   // reqPwdLogin
 } from '../api'
-import {reqWorld} from "../api";
+import {reqWorld,reqUserInfo} from '../api'
 
 export default {
   //异步获取地址
@@ -44,15 +44,26 @@ export default {
   // },
 
   //同步记录用户信息
-  recordUser({commit},userInfo){
-    commit(RECEIVE_USER_INFO,{userInfo})
+  recordUser ({commit}, userInfo) {
+    commit(RECEIVE_USER_INFO, {userInfo})
+  },
+//异步记录用户信息
+  async getUserInfo ({commit}) {
+    const result = await reqUserInfo()
+    console.log(result)
+    if (result["id"]) {
+      const userInfo = result
+      commit(RECEIVE_USER_INFO, {userInfo})
+    }
   },
 
   //异步
-  async getWorld({commit}) {
-    const result=await reqWorld()
-    const world=result.results
-    commit(RECEIVE_WORLD,{world})
+  async getWorld ({commit}, callback) {
+    const result = await reqWorld()
+    const world = result.results
+    commit(RECEIVE_WORLD, {world})
+    //数据更新,通知一下组件
+    callback && callback()
   }
 
 }

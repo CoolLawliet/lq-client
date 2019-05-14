@@ -1,144 +1,226 @@
 <template>
-    <div>
+  <section>
+    <HeaderTop/>
+    <div class="msite_content_wrapper">
+      <ul>
+        <li v-for="(worl, index) in world" :key="index">
+          <div class="forum_card">
+            <!--用户信息-->
+            <div class="user_line">
+              <div class="user_line_wrap">
+                <span class="portrait"><img :src="worl.Cuser['avatar']" alt=""></span>
+                <div class="content">
+                  <h4 class="title">{{worl.Cuser['nickname']}}</h4>
+                  <div class="sub_title">
+                    <span class="createtime">{{worl.create_time}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--内容-->
+            <div class="main_context">
+              <p class="forum_title"></p>
+              <p class="forum_sub_title">{{worl.content}}</p>
+              <div class="sudoku" style="width: 341px">
+                <div class="sudoku_wrap">
+                  <ul id="list">
+                    <li v-for="(pic, index) in worl.worldimages_set" :key="index">
+                  <span class="img_item" style="width: 108.333px;height: 108.333px;"><img
+                    :src="pic"
+                    alt="">
+                  </span>
+                    </li>
+                  </ul>
 
+                </div>
+              </div>
+            </div>
 
-      <div>
-        <div class="goods">
-          <div class="menu-wrapper">
-            <ul>
-              <!--current-->
-              <li class="menu-item" v-for="(worl, index) in world" :key="index"
-               >
-            <span class="text bottom-border-1px">
-
-
-              {{worl.create_time}}
-              <img :src="worl.Cuser['avatar']" alt="" >{{worl.Cuser['avatar']}}
-              <span>{{worl.Cuser['nickname']}}</span>
-
-
-              {{worl.content}}
-            </span>
-              </li>
-            </ul>
+            <div class="interaction" >
+              <div class="wrap">
+                <span class="left">zan</span>
+                <span class="right">liuyan</span>
+              </div>
+            </div>
           </div>
-
-      </div>
-      </div>
+        </li>
+      </ul>
     </div>
+  </section>
 </template>
 
 <script>
+  import BScroll from 'better-scroll'
+  import HeaderTop from '../../components/HeaderTop/HeaderTop.vue'
   import {mapState} from 'vuex'
 
+  // new BScroll('.msite_content_wrapper')
 
+  export default {
+    mounted() {
+      this.$store.dispatch('getWorld')
+    },
 
-    export default {
-      mounted() {
-        this.$store.dispatch('getWorld')
-      },
+    computed: {
+      ...mapState(['world'])
+    },
 
-      computed:{
-        ...mapState(['world'])
+    watch:{
+      world(value){
+        this.$nextTick(()=>{//列表数据更新显示后执行
+          //列表显示后创建
+          new BScroll('.msite_content_wrapper')
+        })
       }
+    },
+    components: {
+      HeaderTop
     }
+  }
 </script>
 
-<!--<style lang="stylus" rel="stylesheet/stylus">-->
-  <!--@import "../../../common/stylus/mixins.styl"-->
-  <!--.goods-->
-    <!--display: flex-->
-    <!--position: absolute-->
-    <!--top: 195px-->
-    <!--bottom: 46px-->
-    <!--width: 100%-->
-    <!--background: #fff;-->
-    <!--overflow: hidden-->
-    <!--.menu-wrapper-->
-      <!--flex: 0 0 80px-->
-      <!--width: 80px-->
-      <!--background: #f3f5f7-->
-      <!--.menu-item-->
-        <!--display: table-->
-        <!--height: 54px-->
-        <!--width: 56px-->
-        <!--padding: 0 12px-->
-        <!--line-height: 14px-->
-        <!--&.current-->
-          <!--position: relative-->
-          <!--z-index: 10-->
-          <!--margin-top: -1px-->
-          <!--background: #fff-->
-          <!--color: $green-->
-          <!--font-weight: 700-->
-          <!--.text-->
-            <!--border-none()-->
-        <!--.icon-->
-          <!--display: inline-block-->
-          <!--vertical-align: top-->
-          <!--width: 12px-->
-          <!--height: 12px-->
-          <!--margin-right: 2px-->
-          <!--background-size: 12px 12px-->
-          <!--background-repeat: no-repeat-->
-        <!--.text-->
-          <!--display: table-cell-->
-          <!--width: 56px-->
-          <!--vertical-align: middle-->
-          <!--bottom-border-1px(rgba(7, 17, 27, 0.1))-->
-          <!--font-size: 12px-->
-    <!--.foods-wrapper-->
-      <!--flex: 1-->
-      <!--.title-->
-        <!--padding-left: 14px-->
-        <!--height: 26px-->
-        <!--line-height: 26px-->
-        <!--border-left: 2px solid #d9dde1-->
-        <!--font-size: 12px-->
-        <!--color: rgb(147, 153, 159)-->
-        <!--background: #f3f5f7-->
-      <!--.food-item-->
-        <!--display: flex-->
-        <!--margin: 18px-->
-        <!--padding-bottom: 18px-->
-        <!--bottom-border-1px(rgba(7, 17, 27, 0.1))-->
-        <!--&:last-child-->
-          <!--border-none()-->
-          <!--margin-bottom: 0-->
-        <!--.icon-->
-          <!--flex: 0 0 57px-->
-          <!--margin-right: 10px-->
-        <!--.content-->
-          <!--flex: 1-->
-          <!--.name-->
-            <!--margin: 2px 0 8px 0-->
-            <!--height: 14px-->
-            <!--line-height: 14px-->
-            <!--font-size: 14px-->
-            <!--color: rgb(7, 17, 27)-->
-          <!--.desc, .extra-->
-            <!--line-height: 10px-->
-            <!--font-size: 10px-->
-            <!--color: rgb(147, 153, 159)-->
-          <!--.desc-->
-            <!--line-height: 12px-->
-            <!--margin-bottom: 8px-->
-          <!--.extra-->
-            <!--.count-->
-              <!--margin-right: 12px-->
-          <!--.price-->
-            <!--font-weight: 700-->
-            <!--line-height: 24px-->
-            <!--.now-->
-              <!--margin-right: 8px-->
-              <!--font-size: 14px-->
-              <!--color: rgb(240, 20, 20)-->
-            <!--.old-->
-              <!--text-decoration: line-through-->
-              <!--font-size: 10px-->
-              <!--color: rgb(147, 153, 159)-->
-          <!--.cartcontrol-wrapper-->
-            <!--position: absolute-->
-            <!--right: 0-->
-            <!--bottom: 12px-->
-<!--</style>-->
+<style lang="stylus" rel="stylesheet/stylus">
+  body {
+    font-size: 14px;
+  }
+
+  div {
+    display: block;
+  }
+
+  h4, p {
+    margin: 0;
+    padding: 0;
+  }
+
+  img {
+    border-style: none;
+  }
+
+  .msite_content_wrapper {
+    position fixed
+    top: 45px
+    bottom: 46px
+    width: 100%
+  }
+
+  .forum_card {
+    padding-top: 17px;
+    padding-bottom: 38px;
+  }
+
+  /*用户信息*/
+  .user_line {
+    margin: 0 17px;
+  }
+
+  .user_line_wrap {
+    position: relative;
+    text-decoration: none;
+    width: 100%;
+    display: flex;
+  }
+
+  .user_line_wrap > .portrait > img {
+    position: relative;
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    margin-right: 8px;
+    background-size: cover;
+    border-radius: 50%;
+  }
+
+  .content {
+    text-align: left;
+  }
+
+  .content > .title {
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 400;
+  }
+
+  .sub_title {
+    font-size: 12px;
+    color: #999;
+  }
+
+  /*内容*/
+  .main_context .forum_title {
+    line-height: 24px;
+    font-size: 16px;
+    margin: 13px 17px 4px;
+    text-align: left;
+    color: #000;
+  }
+
+  .main_context .forum_sub_title {
+    line-height: 20px;
+    font-size: 16px;
+    margin-left: 17px;
+    margin-right: 17px;
+    text-align: left;
+    color: #666;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .sudoku {
+    position: relative;
+    margin: 0 17px;
+  }
+
+  /*.sudoku_wrap {
+    display: flex;
+    flex-flow: row nowrap;
+  }*/
+
+  #list{
+    text-align center
+    width: 349px
+  }
+  #list>li{
+    float: left;
+    display: block;
+    margin-right: 8px;
+    width: 108.333px;
+    height: 108.333px;
+    margin-top: 10px;
+  }
+
+  .sudoku .img_item {
+    display: block;
+    background-size: cover;
+    margin-right: 8px;
+    margin-top: 9px;
+    background-color: #eee;
+  }
+
+  .sudoku .img_item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /*底部*/
+  .wrap {
+    width: 100%;
+    line-height: 44px;
+    overflow: hidden
+  }
+
+  .left {
+    margin-left: 20px;
+    float: left;
+  }
+
+  .right {
+    margin-right: 20px;
+    float: right;
+  }
+</style>

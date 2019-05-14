@@ -1,84 +1,127 @@
 <template>
-  <div class="forum_card">
-    <!--用户信息-->
-    <div class="user_line">
-      <div class="user_line_wrap">
-        <span class="portrait" style="background-image: url(//gss0.bdstatic.com/6LZ1dD3d1sgCo2Kml5_Y_D3/sys/portrait/item/5c85e7b…?t=1501978093);"></span>
-        <div class="content">
-          <h4 class="title">Tom</h4>
-          <div class="sub_title">
-            <span class="forumname">XXOO吧</span>
-            <span class="split"></span>
-            <span class="createtime">2019-5-5 22:22:22</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--内容-->
-    <div class="main_context">
-      <p class="forum_title">一旦爆发战争，中国必定手足无措？俄专家一句话说到重点</p>
-      <p class="forum_sub_title">{{world}}</p>
-      <div class="sudoku" style="width: 341px">
-        <div class="sudoku_wrap">
-          <span class="img_item" style="width: 108.333px;height: 108.333px;"><img src="http://imgsrc.baidu.com/forum/abpic/item/d1c8a786c9177f3ea74e26457ecf3bc79f3d5604.jpg" alt="" ></span>
-          <span class="img_item" style="width: 108.333px;height: 108.333px;"><img src="http://imgsrc.baidu.com/forum/abpic/item/d1c8a786c9177f3ea74e26457ecf3bc79f3d5604.jpg" alt=""></span>
-          <span class="img_item" style="width: 108.333px;height: 108.333px;"><img src="http://imgsrc.baidu.com/forum/abpic/item/d1c8a786c9177f3ea74e26457ecf3bc79f3d5604.jpg" alt=""></span>
-        </div>
-      </div>
-    </div>
-    <!--底部-->
-    <div class="interaction">
-      <div class="wrap">
-        <span class="left">zan</span>
-        <span class="right">liuyan</span>
-      </div>
-    </div>
-  </div>
+  <section>
+    <HeaderTop/>
+    <div class="msite_content_wrapper">
+      <ul>
+        <li v-for="(worl, index) in world" :key="index">
+          <div class="forum_card">
+            <!--用户信息-->
+            <div class="user_line">
+              <div class="user_line_wrap">
+                <span class="portrait"><img :src="worl.Cuser['avatar']" alt=""></span>
+                <div class="content">
+                  <h4 class="title">{{worl.Cuser['nickname']}}</h4>
+                  <div class="sub_title">
+                    <span class="createtime">{{worl.create_time}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--内容-->
+            <div class="main_context">
+              <p class="forum_title"></p>
+              <p class="forum_sub_title">{{worl.content}}</p>
+              <div class="sudoku" style="width: 341px">
+                <div class="sudoku_wrap">
+                  <ul id="list">
+                    <li v-for="(pic, index) in worl.worldimages_set" :key="index">
+                  <span class="img_item" style="width: 108.333px;height: 108.333px;"><img
+                    :src="pic"
+                    alt="">
+                  </span>
+                    </li>
+                  </ul>
 
+                </div>
+              </div>
+            </div>
+
+            <div class="interaction" >
+              <div class="wrap">
+                <span class="left">zan</span>
+                <span class="right">liuyan</span>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
 </template>
 
 <script>
+  import BScroll from 'better-scroll'
+  import HeaderTop from '../../components/HeaderTop/HeaderTop.vue'
   import {mapState} from 'vuex'
 
+  // new BScroll('.msite_content_wrapper')
+
   export default {
-    mounted(){
+    mounted() {
       this.$store.dispatch('getWorld')
     },
 
-    computed:{
+    computed: {
       ...mapState(['world'])
     },
+
+    watch:{
+      world(value){
+        this.$nextTick(()=>{//列表数据更新显示后执行
+            //列表显示后创建
+            new BScroll('.msite_content_wrapper')
+        })
+      }
+    },
+    components: {
+      HeaderTop
+    }
   }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  body{
+  body {
     font-size: 14px;
   }
-  div{
+
+  div {
     display: block;
   }
-  h4,p{
+
+  h4, p {
     margin: 0;
     padding: 0;
   }
-  img{
+
+  img {
     border-style: none;
   }
-  .forum_card{
-    padding-top: 17px;
+
+  .msite_content_wrapper {
+    position fixed
+    top: 45px
+    bottom: 46px
+    width: 100%
   }
+
+  .forum_card {
+    padding-top: 17px;
+    padding-bottom: 38px;
+  }
+
   /*用户信息*/
-  .user_line{
+  .user_line {
     margin: 0 17px;
   }
-  .user_line_wrap{
+
+  .user_line_wrap {
     position: relative;
     text-decoration: none;
     width: 100%;
     display: flex;
   }
-  .user_line_wrap>.portrait{
+
+  .user_line_wrap > .portrait > img {
     position: relative;
     display: inline-block;
     width: 35px;
@@ -87,37 +130,33 @@
     background-size: cover;
     border-radius: 50%;
   }
-  .content{
+
+  .content {
     text-align: left;
   }
-  .content>.title{
+
+  .content > .title {
     margin-bottom: 4px;
     font-size: 14px;
     color: #333;
     font-weight: 400;
   }
-  .sub_title{
+
+  .sub_title {
     font-size: 12px;
     color: #999;
   }
-  .sub_title>.split{
-    position: relative;
-    display: inline-block;
-    top: 1px;
-    margin: 0 7px;
-    width: 1px;
-    height: 10px;
-    background: #999;
-  }
+
   /*内容*/
-  .main_context .forum_title{
+  .main_context .forum_title {
     line-height: 24px;
     font-size: 16px;
     margin: 13px 17px 4px;
     text-align: left;
     color: #000;
   }
-  .main_context .forum_sub_title{
+
+  .main_context .forum_sub_title {
     line-height: 20px;
     font-size: 16px;
     margin-left: 17px;
@@ -130,36 +169,57 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
   }
-  .sudoku{
+
+  .sudoku {
     position: relative;
     margin: 0 17px;
   }
-  .sudoku_wrap{
+
+  /*.sudoku_wrap {
     display: flex;
     flex-flow: row nowrap;
-  }
-  .sudoku .img_item{
+  }*/
+
+    #list{
+      text-align center
+      width: 349px
+    }
+    #list>li{
+      float: left;
+      display: block;
+      margin-right: 8px;
+      width: 108.333px;
+      height: 108.333px;
+      margin-top: 10px;
+    }
+
+  .sudoku .img_item {
     display: block;
     background-size: cover;
     margin-right: 8px;
     margin-top: 9px;
     background-color: #eee;
   }
-  .sudoku .img_item img{
+
+  .sudoku .img_item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
+
   /*底部*/
-  .wrap{
+  .wrap {
     width: 100%;
     line-height: 44px;
+    overflow: hidden
   }
-  .left{
+
+  .left {
     margin-left: 20px;
     float: left;
   }
-  .right{
+
+  .right {
     margin-right: 20px;
     float: right;
   }
