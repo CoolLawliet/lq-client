@@ -2,49 +2,54 @@
   <section>
     <HeaderTop/>
     <div class="msite_content_wrapper">
-      <ul>
-        <li v-for="(worl, index) in world" :key="index">
-          <div class="forum_card">
-            <!--用户信息-->
-            <div class="user_line">
-              <div class="user_line_wrap">
-                <span class="portrait"><img :src="worl.Cuser['avatar']" alt=""></span>
-                <div class="content">
-                  <h4 class="title">{{worl.Cuser['nickname']}}</h4>
-                  <div class="sub_title">
-                    <span class="createtime">{{worl.create_time}}</span>
+      <Scroll
+        ref="pullrefresh"
+        @pulldown="loadData"
+        @pullup="loadMore">
+        <ul>
+          <li v-for="(worl, index) in world" :key="index">
+            <div class="forum_card">
+              <!--用户信息-->
+              <div class="user_line">
+                <div class="user_line_wrap">
+                  <span class="portrait"><img :src="worl.Cuser['avatar']" alt=""></span>
+                  <div class="content">
+                    <h4 class="title">{{worl.Cuser['nickname']}}</h4>
+                    <div class="sub_title">
+                      <span class="createtime">{{worl.create_time}}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <!--内容-->
-            <div class="main_context">
-              <p class="forum_title"></p>
-              <p class="forum_sub_title">{{worl.content}}</p>
-              <div class="sudoku" style="width: 341px">
-                <div class="sudoku_wrap">
-                  <ul id="list">
-                    <li v-for="(pic, index) in worl.worldimages_set" :key="index">
+              <!--内容-->
+              <div class="main_context">
+                <p class="forum_title"></p>
+                <p class="forum_sub_title">{{worl.content}}</p>
+                <div class="sudoku" style="width: 341px">
+                  <div class="sudoku_wrap">
+                    <ul id="list">
+                      <li v-for="(pic, index) in worl.worldimages_set" :key="index">
                   <span class="img_item" style="width: 108.333px;height: 108.333px;"><img
                     :src="pic"
                     alt="">
                   </span>
-                    </li>
-                  </ul>
+                      </li>
+                    </ul>
 
+                  </div>
+                </div>
+              </div>
+
+              <div class="interaction">
+                <div class="wrap">
+                  <span class="left">zan</span>
+                  <span class="right">liuyan</span>
                 </div>
               </div>
             </div>
-
-            <div class="interaction" >
-              <div class="wrap">
-                <span class="left">zan</span>
-                <span class="right">liuyan</span>
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </Scroll>
     </div>
   </section>
 </template>
@@ -52,29 +57,90 @@
 <script>
   import BScroll from 'better-scroll'
   import HeaderTop from '../../components/HeaderTop/HeaderTop.vue'
+  import Scroll from '../../components/Scroll/Scroll.vue'
   import {mapState} from 'vuex'
 
-  // new BScroll('.msite_content_wrapper')
-
   export default {
-    mounted() {
-      this.$store.dispatch('getWorld')
+
+    data() {
+      return {
+        cricleList: [],
+        page: 2, // 加载更多从page2开始
+        page_size: 10, // 每次请求3条数据
+        loading: false,
+        world :[]
+      };
+    },
+    created() {
+      this.getLatestData();
+    },
+    methods: {
+      getLatestData() {
+        if (this.loading) return;
+        this.loading = true;
+        this.$axios.get("http://server.nsloop.com:17882/world/").then(res => {
+          this.loading = false;
+          // console.log(res)
+          this.world = [...res.data.results];
+          // console.log(this.cricleList);
+          // console.log(this.world)
+          this.$refs.pullrefresh.$emit("pullrefresh.finishLoad");
+        });
+      },
+      loadData() {
+        //下拉刷新重新初始化
+        this.page = 2;
+        this.getLatestData();
+      },
+      loadMore() {
+        this.getMoreData();
+      },
+      getMoreData() {
+        if (this.loading) return;
+        // 发送axios请求
+        this.loading = true;
+        this.$axios(`http://server.nsloop.com:17882/world/?page=${this.page}&page_size=${this.page_size}`).then(res => {
+          var total=res['data']['count']/this.page_size+1
+          this.loading = false;
+          console.log(res)
+          const result = [...res.data.results];
+          // console.log(result)
+          if (this.page<=total) {
+            // 拿到结果数据进行遍历 push到列表数组中，并且page+1
+            this.$refs.pullrefresh.$emit("infinitescroll.reInit");
+            result.forEach(worl => {
+              this.world.push(worl);
+            });
+            this.page++;
+          } else {
+            // 数组为空，没有更多数据，page不再递增
+            this.$refs.pullrefresh.$emit("infinitescroll.loadedDone");
+          }
+        }).catch(error=> {
+          console.log(error.response)
+          this.$refs.pullrefresh.$emit("infinitescroll.loadedDone");
+        })
+      }
+    },
+
+    mounted () {
+      // this.$store.dispatch('getWorld')
     },
 
     computed: {
-      ...mapState(['world'])
+      // ...mapState(['world'])
     },
-
-    watch:{
-      world(value){
-        this.$nextTick(()=>{//列表数据更新显示后执行
+    watch: {
+      world (value) {
+        this.$nextTick(() => {//列表数据更新显示后执行
           //列表显示后创建
           new BScroll('.msite_content_wrapper')
         })
       }
     },
     components: {
-      HeaderTop
+      HeaderTop,
+      Scroll
     }
   }
 </script>
@@ -180,11 +246,12 @@
     flex-flow: row nowrap;
   }*/
 
-  #list{
+  #list {
     text-align center
     width: 349px
   }
-  #list>li{
+
+  #list > li {
     float: left;
     display: block;
     margin-right: 8px;

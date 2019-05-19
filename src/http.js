@@ -18,6 +18,7 @@ axios.interceptors.response.use(response => {
     const { status } = error.response
 
     if (status == 401) {
+
         alert('token值过期或无效，请重新登录')
         // 清除token
       localStorage.removeItem('token')
@@ -25,6 +26,7 @@ axios.interceptors.response.use(response => {
         // 页面跳转
         router.push('/login')
     } else
+        //TODO 线上环境要删除
         alert(error.response.data)
 
     return Promise.reject(error)

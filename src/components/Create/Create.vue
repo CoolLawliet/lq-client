@@ -10,7 +10,7 @@ Description 发布动态
 
     <uploader @getFiles='getImageList' @removeFiles='removeImage'></uploader>
     <div class="btn-wrapper">
-        <mt-button class='btn-send' size="large" type="primary" @click="send">发布</mt-button>
+        <mt-button v-show="!loading" class='btn-send' size="large" type="primary" @click="send">发布</mt-button>
       <br>
     </div>
 
@@ -26,13 +26,13 @@ export default {
   name: "DynamicCreate",
   data() {
     return {
+      loading:false,
       dynamicContent: "", //动态内容
       imgList: [], //已上传的图片集合
       FilecodeList: [],
       isSubmit: false
     };
   },
-
   computed:{
     ...mapState(['userInfo'])
   },
@@ -109,6 +109,7 @@ export default {
       // };
 
       // 重要
+      this.loading=true
       let formData = new FormData();
       formData.append('type',  2);
       formData.append('content', this.dynamicContent);

@@ -7,6 +7,7 @@
   </HeaderTop>
     <Create/>
     <!--<Upload/>-->
+    <Loading :loading="loading"/>
   </section>
 </template>
 
@@ -14,11 +15,19 @@
   import HeaderTop from '../../components/HeaderTop/HeaderTop.vue'
   import Create from '../../components/Create/Create.vue'
   import Upload from '../../components/Upload/Upload.vue'
+  import Loading from './Loading/Loading.vue'
     export default {
+    data(){
+      return{
+        loading:false
+      }
+
+    },
     components:{
       HeaderTop,
       Create,
-      Upload
+      Upload,
+      Loading
     }
     }
 </script>

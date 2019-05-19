@@ -50,7 +50,7 @@ export default {
 //异步记录用户信息
   async getUserInfo ({commit}) {
     const result = await reqUserInfo()
-    console.log(result)
+    // console.log(result)
     if (result["id"]) {
       const userInfo = result
       commit(RECEIVE_USER_INFO, {userInfo})
@@ -58,12 +58,12 @@ export default {
   },
 
   //异步
-  async getWorld ({commit}, callback) {
+  async getWorld ({commit}/*callback*/) {
     const result = await reqWorld()
     const world = result.results
     commit(RECEIVE_WORLD, {world})
     //数据更新,通知一下组件
-    callback && callback()
+    // callback && callback()
   }
 
 }
