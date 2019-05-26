@@ -63,6 +63,7 @@
   import {reqPwdLogin} from "../../api";
 
   export default {
+    name:"login",
     data() {
       return {
         loginWay: true,//true代表短信登录，false密码登录
@@ -117,7 +118,7 @@
           //将user保存到vuex的state
           this.$store.dispatch('recordUser',user)
           //去个人中心界面
-          this.$router.push('/msite')
+          this.$router.push('/')
       } else {
           //显示新的图片验证码
           this.getCaptcha()

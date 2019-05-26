@@ -97,7 +97,9 @@
 
 <script>
   import {mapState} from 'vuex'
+
     export default {
+      name:"profile",
     computed:{
       ...mapState(['userInfo'])
      },
@@ -108,6 +110,7 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixins.styl"
+  @import '../../../static/mui/css/mui.css'
   .profile //我的
     overflow hidden
     width 100%

@@ -17,6 +17,7 @@
   import Upload from '../../components/Upload/Upload.vue'
   import Loading from './Loading/Loading.vue'
     export default {
+      name:"publish",
     data(){
       return{
         loading:false

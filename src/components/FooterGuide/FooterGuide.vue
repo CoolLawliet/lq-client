@@ -1,49 +1,48 @@
 <template>
   <div class="footer_guide">
-    <span class="guide_item" :class="{on:'/msite'===$route.path}" @click="goTo('/msite')">
+    <router-link class="guide_item" active-class="guide_item on" :to="{path:'/msite'}">
       <span class="item_icon">
         <i class="iconfont icon-shouye"></i>
       </span>
       <span>首页</span>
-    </span>
-    <a href="javascript:;" class="guide_item" :class="{on:'/dynamic'===$route.path}" @click="goTo('/dynamic')">
+    </router-link>
+    <router-link class="guide_item" active-class="guide_item on"  :to="{path:'/dynamic'}">
       <span class="item_icon">
         <i class="iconfont icon-buxing"></i>
       </span>
       <span>动态</span>
-    </a>
-    <a href="javascript:;" class="guide_item" :class="{on:'/publish'===$route.path}" @click="goTo('/publish')">
+    </router-link>
+    <router-link class="guide_item" active-class="guide_item on"  :to="{path:'/publish'}">
       <span class="item_icon">
         <i class="iconfont icon-roundadd" style="font-size: 33px"></i>
       </span>
-      <span></span>
-    </a>
-    <a href="javascript:;" class="guide_item" :class="{on:'/circle'===$route.path}" @click="goTo('/circle')">
+    </router-link>
+    <router-link class="guide_item"active-class="guide_item on" :to="{path:'/circle'}">
       <span class="item_icon">
         <i class="iconfont icon-zhinengyouhua"></i>
       </span>
       <span>圈圈</span>
-    </a>
-    <a href="javascript:;" class="guide_item" :class="{on:'/profile'===$route.path}" @click="goTo('/profile')">
+    </router-link>
+    <router-link class="guide_item"active-class="guide_item on"  :to="{path:'/profile'}">
       <span class="item_icon">
         <i class="iconfont icon-geren"></i>
       </span>
       <span>我的</span>
-    </a>
+    </router-link>
   </div>
 </template>
 
 <script>
     export default {
-      methods:{
-        goTo(path){
-          this.$router.replace(path)
-        }
-      }
+      // methods:{
+      //   goTo(path){
+      //     this.$router.replace(path)
+      //   }
+      // }
     }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus" rel="stylesheet/stylus" >
   @import "../../common/stylus/mixins.styl"
   .footer_guide  //footer
     top-border-1px(#e4e4e4)

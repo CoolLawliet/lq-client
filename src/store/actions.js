@@ -58,12 +58,12 @@ export default {
   },
 
   //异步
-  async getWorld ({commit}/*callback*/) {
+  async getWorld ({commit},callback) {
     const result = await reqWorld()
     const world = result.results
     commit(RECEIVE_WORLD, {world})
     //数据更新,通知一下组件
-    // callback && callback()
+    callback && callback()
   }
 
 }

@@ -27,7 +27,7 @@ axios.interceptors.response.use(response => {
         router.push('/login')
     } else
         //TODO 线上环境要删除
-        alert(error.response.data)
+        // alert(error.response.data)
 
     return Promise.reject(error)
 })
