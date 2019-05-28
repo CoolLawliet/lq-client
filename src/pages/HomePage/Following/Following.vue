@@ -1,28 +1,60 @@
-
 <template>
-  <div>
-    <HeaderTop/>
+  <div style="height: 100%;">
     <!--滑动区域-->
     <div ref="mescroll" class="mescroll">
       <!--展示上拉加载的数据列表-->
       <ul id="dataList" class="data-list">
-        <!--<li v-for="pd in dataList" :key="pd.id">-->
-        <!--<img class="pd-img" :imgurl="pd.pdImg" src="../../../static/mock/img/loading.png"/>-->
-        <!--<p class="pd-name">{{pd.pdName}}</p>-->
-        <!--<p class="pd-price">{{pd.pdPrice}} 元</p>-->
-        <!--<p class="pd-sold">已售{{pd.pdSold}}件</p>-->
-        <!--</li>-->
-        <li v-for="(worl, index) in dataList" :key="index">
+        <li> <div class="home">
+          <div class="message">
+            <div class="avatar-wrap">
+              <a href="" class="user-avatar">
+                <div class="user-avatar-content"
+                     :style="{backgroundImage:'url(' + dataList['userinfo']['avatar'] + ')'}">
+                </div>
+              </a>
+            </div>
+            <div class="user">
+              <div class="name">{{dataList['userinfo']['nickname']}}</div>
+              <div class="bio" v-if="dataList.userinfo.sign">{{dataList['userinfo']['sign']}}</div>
+              <div class="bio" v-else>他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名</div>
+            </div>
+            <div class="lab">
+              <div class="lab-content"><p>{{dataList.days}}</p></div>
+              <div class="lab-content" v-if="dataList['userinfo']['gender']==='男'"><p>♂</p></div>
+              <div class="lab-content" v-else><p>♀</p></div>
+              <div class="lab-content"><p>{{dataList['userinfo']['department']}}</p></div>
+              <!--<div class="lab-content"  ><p>dataList['userinfo']</p></div>-->
+
+            </div>
+            <div class="center" v-if="dataList.userinfo.id===id">
+              <div class="lq-button lq-button-primary " v-if="dataList.userinfo">编辑</div>
+            </div>
+            <div class="center" v-else>
+              <div class="lq-button lq-button-primary " style="background-color:deepskyblue;" v-if="dataList.userinfo">
+                +私信
+              </div>
+              <div class="lq-button lq-button-primary " v-if="dataList.userinfo">+关注</div>
+
+            </div>
+          </div>
+          <div class="stats-count">
+            粉丝
+            <span class="number">{{dataList.fr_count}}</span>
+            关注
+            <span class="number">{{dataList.fd_count}}</span>
+          </div>
+        </div></li>
+        <li v-for="(worl, index) in dataList1" :key="index">
           <div class="forum_card">
             <!--用户信息-->
             <div class="user_line">
               <div class="user_line_wrap">
-                <!--<span class="portrait"><img :src="worl.Cuser['avatar']" alt=""></span>-->
-                <router-link class="portrait" :to="{path:'/homepage',query:{id:worl.Cuser['id']}}"><img :src="worl.Cuser['avatar']" alt=""></router-link>
+                <span class="portrait"><img :src="dataList['userinfo']['avatar']" alt=""></span>
+                <!--<router-link class="portrait"><img :src="worl.Cuser['avatar']" alt=""></router-link>-->
                 <div class="content">
-                  <h4 class="title">{{worl.Cuser['nickname']}}</h4>
+                  <h4 class="title">{{dataList['userinfo']['nickname']}}</h4>
                   <div class="sub_title">
-                    <span class="createtime">{{worl.create_time}}</span>
+                    <span class="createtime">{{worl['create_time']}}</span>
                   </div>
                 </div>
               </div>
@@ -33,54 +65,40 @@
               <p class="forum_sub_title1">{{worl.content}}</p>
               <div class="sudoku" style="width: 349px">
                 <div class="sudoku_wrap">
-                  <!--<ul id="list">-->
-                    <!--<li  :key="index">-->
-                  <!--<span class="img_item" style="width: 108.333px;height: 108.333px;">-->
-                    <!--<img :src="pic" alt="">-->
-    <viewer  class="img_item" >
-            <img  v-for="(pic, index) in worl.worldimages_set" :src="pic" :key="index" >
-        </viewer>
-                  <!--</span>-->
-                    <!--</li>-->
-                  <!--</ul>-->
+
+                  <viewer class="img_item">
+                    <img v-for="(pic, index) in worl.worldimages_set" :src="pic" :key="index">
+                  </viewer>
+
                 </div>
               </div>
             </div>
-            <div class="interaction" >
+            <div class="interaction">
               <div class="wrap">
                 <span class="left">zan</span>
                 <span class="right">liuyan</span>
               </div>
-              <!--<hr style="color: #eee">-->
             </div>
           </div>
         </li>
-
       </ul>
     </div>
+
   </div>
 </template>
 
 <script>
-  import BScroll from 'better-scroll'
-  import HeaderTop from '../../components/HeaderTop/HeaderTop.vue'
-  import {mapState} from 'vuex'
   import MeScroll from 'mescroll.js'
   import 'mescroll.js/mescroll.min.css'
-  import Vue from 'vue'
 
-
-  // new BScroll('.msite_content_wrapper')
   export default {
-    data () {
-      return {
+    data(){
+      return{
+        dataList1: [],
         mescroll: null, // mescroll实例对象
-        dataList: [], // 列表数据
         isEdit: false, // 是否获取编辑的列表数据
-
       }
     },
-
     mounted: function () {
       // 创建MeScroll对象
       this.mescroll = new MeScroll(this.$refs.mescroll, { // 在vue的mounted生命周期初始化mescroll,确保此处配置的ref有值
@@ -90,7 +108,7 @@
             num: 0, // 当前页码,默认0,回调之前会加1,即callback(page)会从1开始
             size: 10 // 每页数据的数量
           },
-          noMoreSize: 5, // 如果列表已无数据,可设置列表的总数量要大于等于5条才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看
+          noMoreSize: 2, // 如果列表已无数据,可设置列表的总数量要大于等于5条才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看
           // toTop: { // 配置回到顶部按钮
           //   src: './static/images/mescroll-totop.png'
           //
@@ -101,16 +119,12 @@
         }
       })
     },
-
-
-    methods: {
-      // 上拉回调 page = {num:1, size:10}; num:当前页 ,默认从1开始; size:每页数据条数,默认10
-
-      //上拉加载的回调 page = {num:1, size:10}; num:当前页 默认从1开始, size:每页数据条数,默认10
+    methods:{
       upCallback(page) {
+        var stuID = this.$route.query.id
         var pageNum = page.num; // 页码, 默认从1开始 如何修改从0开始 ?
         var pageSize = page.size; // 页长, 默认每页10条
-        this.$axios('http://server.nsloop.com:17882/world/?page=' + pageNum + "&page_size=" + pageSize).then(data => {
+        this.$axios('http://server.nsloop.com:17882/mydynamic/'+stuID+'/?page=' + pageNum + "&page_size=" + pageSize).then(data => {
 
           var curPageData = data.data.results; // 接口返回的当前页数据列表
 
@@ -151,10 +165,11 @@
           //设置列表数据
           //setListData(curPageData);//自行实现 TODO
           if (page.num === 1) {
-            this.dataList = []
+            this.dataList1 = []
 
           }
-          this.dataList = this.dataList.concat(curPageData)
+          this.dataList1 = this.dataList1.concat(curPageData)
+
         }).catch(e=> {
 
           //联网失败的回调,隐藏下拉刷新和上拉加载的状态
@@ -162,105 +177,46 @@
 
         });
       },
-
-
-      // upCallback (page) {
-      //       // 模拟联网
-      //       this.getListDataFromNet(this.pdType, page.num, page.size, (arr) => {
-      //         // 如果是第一页需手动制空列表
-      //         if (page.num === 1) this.dataList = []
-      //         // 把请求到的数据添加到列表
-      //         this.dataList = this.dataList.concat(arr)
-      //         // 数据渲染成功后,隐藏下拉刷新的状态
-      //         this.$nextTick(() => {
-      //           this.mescroll.endSuccess(arr.length)
-      //         })
-      //       }, () => {
-      //         this.mescroll.endErr()
-      //       })
-      //     },
-      /* 联网加载列表数据
-       * 在您的实际项目中,请参考官方写法: http://www.mescroll.com/api.html#tagUpCallback
-       * 请忽略getListDataFromNet的逻辑,这里仅仅是在本地模拟分页数据,本地演示用
-       * 实际项目以您服务器接口返回的数据为准,无需本地处理分页.
-       */
-
-    },
-
-    // 进入路由时,恢复列表状态
-    beforeRouteEnter (to, from, next) {  // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
-      next(vm => {
-        if (vm.mescroll) {
-          // 恢复到之前设置的isBounce状态
-          if (vm.mescroll.lastBounce != null) vm.mescroll.setBounce(vm.mescroll.lastBounce)
-          // 滚动到之前列表的位置 (注意:路由使用keep-alive才生效)
-          if (vm.mescroll.lastScrollTop) {
-            vm.mescroll.setScrollTop(vm.mescroll.lastScrollTop)
-            setTimeout(() => { // 需延时,因为setScrollTop内部会触发onScroll,可能会渐显回到顶部按钮
-              vm.mescroll.setTopBtnFadeDuration(0)// 设置回到顶部按钮显示时无渐显动画
-            }, 16)
-          }
-        }
-      })
-    },
-    // 离开路由时,记录列表状态
-    beforeRouteLeave (to, from, next) {  // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写
-      if (this.mescroll) {
-        this.mescroll.lastBounce = this.mescroll.optUp.isBounce// 记录当前是否禁止ios回弹
-        this.mescroll.setBounce(true) // 允许bounce
-        this.mescroll.lastScrollTop = this.mescroll.getScrollTop()// 记录当前滚动条的位置
-        this.mescroll.hideTopBtn(0)// 隐藏回到顶部按钮,无渐隐动画
-      }
-      next()
-
-
-    },
-
-    computed: {
-      ...mapState(['world'])
-    },
-    watch:{
-      world(value){
-        this.$nextTick(()=>{//列表数据更新显示后执行
-          //列表显示后创建
-          new BScroll('.msite_content_wrapper')
-        })
-      }
-    },
-    components: {
-      HeaderTop,
     }
   }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-
-
-  /*以fixed的方式固定mescroll的高度*/
   .mescroll {
     position: fixed;
-    top: 44px;
+    top: 0px;
     bottom: 0;
     height: auto;
     width 102%
   }
-  .mescroll-totop{
+
+  .mescroll-totop {
     right: 5px;
     bottom: 55px;
   }
+
   body {
     font-size: 14px;
 
   }
+
   div {
     display: block;
   }
+
   h4, p {
     margin: 0;
     padding: 0;
   }
+
   img {
     border-style: none;
+  }
+  ul li:first-child{
+    height 350px
+  }
+  ul li:not(:first-child){
+    background-color: white;
   }
   .msite_content_wrapper {
     position fixed
@@ -268,21 +224,25 @@
     bottom: 46px
     width: 100%
   }
+
   .forum_card {
     padding-top: 30px;
     /*padding-bottom: 10px;*/
     border 1px solid #eeeeee
   }
+
   /*用户信息*/
   .user_line {
     margin: 0 17px;
   }
+
   .user_line_wrap {
     position: relative;
     text-decoration: none;
     width: 100%;
     display: flex;
   }
+
   .user_line_wrap > .portrait > img {
     position: relative;
     display: inline-block;
@@ -292,19 +252,23 @@
     background-size: cover;
     border-radius: 50%;
   }
+
   .content {
     text-align: left;
   }
+
   .content > .title {
     margin-bottom: 4px;
     font-size: 14px;
     color: #333;
     font-weight: 400;
   }
+
   .sub_title {
     font-size: 12px;
     color: #999;
   }
+
   /*内容*/
   .main_context .forum_title {
     line-height: 24px;
@@ -313,6 +277,7 @@
     text-align: left;
     color: #000;
   }
+
   .main_context .forum_sub_title1 {
     line-height: 20px;
     font-size: 16px;
@@ -326,19 +291,22 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
   }
+
   .sudoku {
     position: relative;
     margin: 0 17px;
   }
+
   /*.sudoku_wrap {
     display: flex;
     flex-flow: row nowrap;
   }*/
-  #list{
+  #list {
     text-align center
     width: 349px
   }
-  #list>li{
+
+  #list > li {
     float: left;
     display: block;
     margin-right: 8px;
@@ -346,20 +314,23 @@
     height: 108.333px;
     margin-top: 10px;
   }
+
   .sudoku .img_item {
     display: block;
     background-size: cover;
     margin-top: 9px;
 
   }
+
   .sudoku .img_item img {
     width: 108.333px;
     height: 108.333px;
     object-fit: cover;
     display inline-block
-    margin-right  8px
+    margin-right 8px
     margin-top 5px
   }
+
   /*底部*/
   .wrap {
     width: 100%;
@@ -367,15 +338,190 @@
     overflow: hidden
     padding-bottom: 10px;
   }
+
   .left {
     margin-left: 20px;
     float: left;
   }
+
   .right {
     margin-right: 20px;
     float: right;
   }
-  .mescroll-upwarp{
+
+  .mescroll-upwarp {
     min-height 60px
+  }
+  .all {
+    position: relative
+  }
+
+  .background {
+    display: block;
+    height: 300px;
+    width: 100%
+    /*background-position: 50%;*/
+    background-size: 100% 100%;
+    position: absolute;
+    clear: both;
+    background-color: #d9d9d9;
+    margin-top: 45px
+    opacity: 0.8;
+  }
+
+  .home {
+    position: absolute
+    width: 100%
+    height: 100%
+    margin-top: 40px
+  }
+
+  .message {
+    position: absolute;
+    top: -35px;
+  }
+
+  .user {
+    clear: both;
+    /*text-align: center;*/
+  }
+
+  .user-avatar {
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    width: 60px;
+    height: 60px;
+    left: 20px;
+    margin: auto;
+    top: 75px;
+  }
+
+  .user-avatar-content {
+    border-radius: 50%;
+  }
+
+  .user-avatar-content {
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+    background: 50% no-repeat;
+    background-size: cover;
+  }
+
+
+  .name {
+    /*font-family: "Microsoft YaHei";*/
+    /*text-align: center;*/
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.2;
+    padding-top: 150px;
+    color: white;
+    margin-left: 20px;
+  }
+
+  .bio {
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 40px;
+    font-size: 12px;
+    line-height: 1.23;
+    color: white;
+    /*font-family: "Microsoft YaHei";*/
+    font-weight bold
+    width: 310px
+    word-wrap: break-word;
+    word-break: normal;
+  }
+
+  .center {
+    /*text-align: center;*/
+    /*padding: 45px 0;*/
+    position: absolute;
+    top: 85px;
+    right: 20px;
+  }
+
+  .lq-button-primary {
+
+  }
+
+  .lq-button {
+    background-color: #ffe411;
+    border-color: #ffe411;
+    display: inline-block;
+    font-size: 12px;
+    line-height: 1;
+    color: #404040;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #dbdbdb;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: none;
+    margin: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding: .6em 1.3em;
+    border-radius: 1.6em;
+  }
+
+  .stats-count {
+    /*border-top: 1px solid #f5f5f5;*/
+    font-size: 15px;
+    color: white;
+    position: absolute
+    text-align: center;
+    /*padding-top: 90px;*/
+    /*padding-bottom: 10px;*/
+    margin-top: 280px
+    height: 20px
+    width: 349px
+    padding-left: 15px;
+  }
+
+  .number:first-of-type {
+    padding-right: 20px;
+  }
+
+  .number {
+    font-size: 12px;
+    font-weight: 600;
+    vertical-align: center;
+    color: white;
+  }
+
+  .lab {
+    display: block;
+    /*background-size: cover;*/
+    margin-top: 30px;
+    /*background-color: pink;*/
+    height: 10px
+
+
+    /*width 100%*/
+
+  }
+
+  .lab .lab-content {
+    /*width: 5px;*/
+    /*height: 3px;*/
+    border-radius 10px
+    background-color: rgba(255, 255, 255, 0.3);
+    color white
+    object-fit: cover;
+    font-size 10px
+    padding 3px 5px
+    margin-left: 20px
+    margin-right: -18px;
+    display inline-block
+    /*position: relative*/
+    /*margin-right  2px*/
+    /*margin-top 5px*/
   }
 </style>

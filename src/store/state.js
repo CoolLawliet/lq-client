@@ -3,5 +3,6 @@
 */
 export default {
   userInfo:{},//用户信息
-  world:{}
+  world:{},//动态信息
+  homeMessage:{},//个人主页信息
 }

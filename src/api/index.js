@@ -6,8 +6,8 @@ const BASE_URL='/api'
 
 // 1、世界圈
 export const reqWorld=()=>ajax('http://server.nsloop.com:17882/world/')
-// 2、获取食品分类列表
-// export const reqFoodCategorys=()=>ajax(BASE_URL+'/index_category')
+// 2、获取个人主页信息
+export const reqHomeMessage=(stuID)=>ajax('http://server.nsloop.com:17882/mysite/')
 // 3、根据经纬度获取商铺列表
 // export const reqShops=(longitude,latitue)=>ajax(BASE_URL+'/shops',{longitude,latitue})
 // 4、根据用户信息登录
