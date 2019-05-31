@@ -2,48 +2,49 @@
   <div style="height: 100%;">
     <!--滑动区域-->
     <div ref="mescroll" class="mescroll">
+      <div class="home">
+      <div class="message">
+        <div class="avatar-wrap">
+          <a href="" class="user-avatar">
+            <div class="user-avatar-content"
+                 :style="{backgroundImage:'url(' + dataList['userinfo']['avatar'] + ')'}">
+            </div>
+          </a>
+        </div>
+        <div class="user">
+          <div class="name">{{dataList['userinfo']['nickname']}}</div>
+          <div class="bio" v-if="dataList.userinfo.sign">{{dataList['userinfo']['sign']}}</div>
+          <div class="bio" v-else>他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名</div>
+        </div>
+        <div class="lab">
+          <div class="lab-content"><p>{{dataList.days}}</p></div>
+          <div class="lab-content" v-if="dataList['userinfo']['gender']==='男'"><p>♂</p></div>
+          <div class="lab-content" v-else><p>♀</p></div>
+          <div class="lab-content"><p>{{dataList['userinfo']['department']}}</p></div>
+          <!--<div class="lab-content"  ><p>dataList['userinfo']</p></div>-->
+
+        </div>
+        <div class="center" v-if="dataList.userinfo.id===id">
+          <div class="lq-button lq-button-primary " v-if="dataList.userinfo">编辑</div>
+        </div>
+        <div class="center" v-else>
+          <div class="lq-button lq-button-primary " style="background-color:deepskyblue;"
+               v-if="dataList.userinfo">
+            +私信
+          </div>
+          <div class="lq-button lq-button-primary " v-if="dataList.userinfo">+关注</div>
+
+        </div>
+      </div>
+      <div class="stats-count">
+        粉丝
+        <span class="number">{{dataList.fr_count}}</span>
+        关注
+        <span class="number">{{dataList.fd_count}}</span>
+      </div>
+    </div>
       <!--展示上拉加载的数据列表-->
       <ul id="dataList" class="data-list">
-        <li> <div class="home">
-          <div class="message">
-            <div class="avatar-wrap">
-              <a href="" class="user-avatar">
-                <div class="user-avatar-content"
-                     :style="{backgroundImage:'url(' + dataList['userinfo']['avatar'] + ')'}">
-                </div>
-              </a>
-            </div>
-            <div class="user">
-              <div class="name">{{dataList['userinfo']['nickname']}}</div>
-              <div class="bio" v-if="dataList.userinfo.sign">{{dataList['userinfo']['sign']}}</div>
-              <div class="bio" v-else>他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名他妈的没签名</div>
-            </div>
-            <div class="lab">
-              <div class="lab-content"><p>{{dataList.days}}</p></div>
-              <div class="lab-content" v-if="dataList['userinfo']['gender']==='男'"><p>♂</p></div>
-              <div class="lab-content" v-else><p>♀</p></div>
-              <div class="lab-content"><p>{{dataList['userinfo']['department']}}</p></div>
-              <!--<div class="lab-content"  ><p>dataList['userinfo']</p></div>-->
-
-            </div>
-            <div class="center" v-if="dataList.userinfo.id===id">
-              <div class="lq-button lq-button-primary " v-if="dataList.userinfo">编辑</div>
-            </div>
-            <div class="center" v-else>
-              <div class="lq-button lq-button-primary " style="background-color:deepskyblue;" v-if="dataList.userinfo">
-                +私信
-              </div>
-              <div class="lq-button lq-button-primary " v-if="dataList.userinfo">+关注</div>
-
-            </div>
-          </div>
-          <div class="stats-count">
-            粉丝
-            <span class="number">{{dataList.fr_count}}</span>
-            关注
-            <span class="number">{{dataList.fd_count}}</span>
-          </div>
-        </div></li>
         <li v-for="(worl, index) in dataList1" :key="index">
           <div class="forum_card">
             <!--用户信息-->
@@ -92,8 +93,8 @@
   import 'mescroll.js/mescroll.min.css'
 
   export default {
-    data(){
-      return{
+    data () {
+      return {
         dataList1: [],
         mescroll: null, // mescroll实例对象
         isEdit: false, // 是否获取编辑的列表数据
@@ -119,19 +120,18 @@
         }
       })
     },
-    methods:{
-      upCallback(page) {
+    methods: {
+      upCallback (page) {
         var stuID = this.$route.query.id
-        var pageNum = page.num; // 页码, 默认从1开始 如何修改从0开始 ?
-        var pageSize = page.size; // 页长, 默认每页10条
-        this.$axios('http://server.nsloop.com:17882/mydynamic/'+stuID+'/?page=' + pageNum + "&page_size=" + pageSize).then(data => {
+        var pageNum = page.num // 页码, 默认从1开始 如何修改从0开始 ?
+        var pageSize = page.size // 页长, 默认每页10条
+        this.$axios('http://server.nsloop.com:17882/mydynamic/' + stuID + '/?page=' + pageNum + '&page_size=' + pageSize).then(data => {
 
-          var curPageData = data.data.results; // 接口返回的当前页数据列表
+          var curPageData = data.data.results // 接口返回的当前页数据列表
 
-
-          var totalPage = data['data']['count']/pageSize+1; // 接口返回的总页数 (比如列表有26个数据,每页10条,共3页; 则totalPage值为3)
+          var totalPage = data['data']['count'] / pageSize + 1 // 接口返回的总页数 (比如列表有26个数据,每页10条,共3页; 则totalPage值为3)
           var totalSize = data['data']['count'] // 接口返回的总数据量(比如列表有26个数据,每页10条,共3页; 则totalSize值为26)
-          var hasNext = data.data.next; // 接口返回的是否有下一页 (true/false)
+          var hasNext = data.data.next // 接口返回的是否有下一页 (true/false)
 
           //联网成功的回调,隐藏下拉刷新和上拉加载的状态;
           //mescroll会根据传的参数,自动判断列表如果无任何数据,则提示空,显示empty配置的内容;
@@ -139,7 +139,7 @@
 
           //方法一(推荐): 后台接口有返回列表的总页数 totalPage
           //必传参数(当前页的数据个数, 总页数)
-          this.mescroll.endByPage(curPageData.length, totalPage);
+          this.mescroll.endByPage(curPageData.length, totalPage)
 
           //方法二(推荐): 后台接口有返回列表的总数据量 totalSize
           //必传参数(当前页的数据个数, 总数据量)
@@ -170,12 +170,12 @@
           }
           this.dataList1 = this.dataList1.concat(curPageData)
 
-        }).catch(e=> {
+        }).catch(e => {
 
           //联网失败的回调,隐藏下拉刷新和上拉加载的状态
-          this.mescroll.endErr();
+          this.mescroll.endErr()
 
-        });
+        })
       },
     }
   }
@@ -212,12 +212,15 @@
   img {
     border-style: none;
   }
-  ul li:first-child{
+
+  ul li:first-child {
     height 350px
   }
-  ul li:not(:first-child){
+
+  ul li:not(:first-child) {
     background-color: white;
   }
+
   .msite_content_wrapper {
     position fixed
     top: 45px
@@ -352,6 +355,7 @@
   .mescroll-upwarp {
     min-height 60px
   }
+
   .all {
     position: relative
   }
