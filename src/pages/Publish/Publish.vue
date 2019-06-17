@@ -1,13 +1,12 @@
 <template>
   <section>
   <HeaderTop>
-    <router-link class="header_search" slot="left" to="/msite">
-      <i class="iconfont icon-sousuo"></i>
+    <router-link class="header_search" slot="left" to="/dynamic">
+      <i class="iconfont icon-fanhui" style="color: white"></i>
     </router-link>
   </HeaderTop>
     <Create/>
     <!--<Upload/>-->
-    <Loading :loading="loading"/>
   </section>
 </template>
 
@@ -15,7 +14,6 @@
   import HeaderTop from '../../components/HeaderTop/HeaderTop.vue'
   import Create from '../../components/Create/Create.vue'
   import Upload from '../../components/Upload/Upload.vue'
-  import Loading from './Loading/Loading.vue'
     export default {
       name:"publish",
     data(){
@@ -28,7 +26,6 @@
       HeaderTop,
       Create,
       Upload,
-      Loading
     }
     }
 </script>

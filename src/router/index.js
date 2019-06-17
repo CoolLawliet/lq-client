@@ -13,6 +13,9 @@ import PostBar from '../pages/PostBar/PostBar.vue'
 import Attention from '../pages/Msite/Attention/Attention'
 import MsiteContent from '../pages/Msite/MsiteContent/MsiteContent'
 import HomePage from '../pages/HomePage/HomePage'
+import Viewerx from '../pages/HomePage/Viewerx/Viewerx'
+import Confess from '../pages/Msite/Confess/Confess'
+import Detail from '../pages/Detail/Detail'
 
 //声明使用插件
 Vue.use(VueRouter)
@@ -28,25 +31,38 @@ const router = new VueRouter({
       component: Msite,
       children: [
         {
-          path: '/msite/msitecontent',
+          path: 'msitecontent',
           name: 'msitecontent',
           component: MsiteContent,
           meta: {
             showFooter: true,
-            keepAlive: true
+            keepAlive: true,
+            title:'首页'
           },
         },
         {
-          path: '/msite/attention',
+          path: 'attention',
           name: 'attention',
           component: Attention,
           meta: {
             showFooter: true,
-            keepAlive: true
+            keepAlive: true,
+            title:'关注'
           },
         },
         {
-          path: '',
+          path: 'confess',
+          name: 'confess',
+          component: Confess,
+          meta: {
+            showFooter: true,
+            keepAlive: true,
+            title:'表白',
+            showClass:true,
+          },
+        },
+        {
+          path: '/msite',
           redirect: '/msite/msitecontent'
         }
       ],
@@ -57,7 +73,7 @@ const router = new VueRouter({
       component: Dynamic,
       meta: {
         showFooter: true,
-        keepAlive: true
+        keepAlive: true,
       }
     },
     {
@@ -76,11 +92,11 @@ const router = new VueRouter({
         showFooter: true
       }
     },
-    {
-      path: '/',
-      name: 'msite',
-      redirect: '/msite'
-    },
+    // {
+    //   path: '/',
+    //   // name: 'msite',
+    //   redirect: '/msite/msitecontent'
+    // },
     {
       path: '/login',
       name: 'login',
@@ -99,8 +115,24 @@ const router = new VueRouter({
     {
       path: '/homepage',
       name: 'homepage',
-      component: HomePage
+      component: HomePage,
+      meta:{
+        keepAlive: true,
+      }
     },
+    {
+      path: '/viewerx',
+      name: 'viewerx',
+      component:Viewerx,
+      meta:{
+        keepAlive: true
+      }
+    },
+    {
+      path:'/detail',
+      name:'detail',
+      component:Detail,
+    }
   ]
 })
 

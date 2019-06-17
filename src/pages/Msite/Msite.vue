@@ -1,7 +1,11 @@
 
 <template>
 <div>
-  <HeaderTop/>
+  <HeaderTop :title="$route.meta.title">
+    <router-link class="header_login" slot="right" :to="{path:'/publish',query:{type:1}}">
+      <i v-show="$route.meta.showClass" class="iconfont icon-roundadd" style="font-size: 22px"></i>
+    </router-link>
+  </HeaderTop>
   <div class="tab">
     <div class="tab-item">
       <router-link to="/msite/msitecontent" replace>首页</router-link>
@@ -9,9 +13,12 @@
     <div class="tab-item">
       <router-link to="/msite/attention" replace>关注</router-link>
     </div>
+    <div class="tab-item">
+      <router-link to="/msite/confess" replace>表白</router-link>
+    </div>
   </div>
   <keep-alive>
-    <router-view/>
+    <router-view></router-view>
   </keep-alive>
 
 </div>

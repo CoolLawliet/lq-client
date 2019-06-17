@@ -5,26 +5,26 @@
         <div class="login_header">
           <h2 class="login_logo">硅谷外卖</h2>
           <div class="login_header_title">
-            <a href="javascript:;" :class="{on:loginWay}" @click="loginWay=true">短信登录</a>
-            <a href="javascript:;" :class="{on:!loginWay}" @click="loginWay=false">密码登录</a>
+            <!--<a href="javascript:;" :class="{on:loginWay}" @click="loginWay=true">短信登录</a>-->
+            <a href="javascript:;" :class="{on:loginWay}" @click="loginWay=true">密码登录</a>
           </div>
         </div>
         <div class="login_content">
           <form @submit.prevent="login">
+            <!--<div :class="{on:loginWay}">-->
+              <!--<section class="login_message">-->
+                <!--<input type="tel" maxlength="11" placeholder="手机号">-->
+                <!--<button disabled="disabled" class="get_verification">获取验证码</button>-->
+              <!--</section>-->
+              <!--<section class="login_verification">-->
+                <!--<input type="tel" maxlength="8" placeholder="验证码">-->
+              <!--</section>-->
+              <!--<section class="login_hint">-->
+                <!--温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意-->
+                <!--<a href="javascript:;">《用户服务协议》</a>-->
+              <!--</section>-->
+            <!--</div>-->
             <div :class="{on:loginWay}">
-              <section class="login_message">
-                <input type="tel" maxlength="11" placeholder="手机号">
-                <button disabled="disabled" class="get_verification">获取验证码</button>
-              </section>
-              <section class="login_verification">
-                <input type="tel" maxlength="8" placeholder="验证码">
-              </section>
-              <section class="login_hint">
-                温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
-                <a href="javascript:;">《用户服务协议》</a>
-              </section>
-            </div>
-            <div :class="{on:!loginWay}">
               <section>
                 <section class="login_message">
                   <input type="text" placeholder="学号" v-model="name">
@@ -86,8 +86,6 @@
         let result
         //前台表单验证
         if (this.loginWay){//短信登录
-
-        } else {//密码登录
           const {name,pwd,captcha}=this
           if (!this.name){
             //用户名必须指定
@@ -106,7 +104,6 @@
           console.log(name,pwd,captcha)
           result = await reqPwdLogin({name,pwd,captcha})
         }
-// console.log(result)
         //根据结果数据处理
         if (result.message==='ok'){
         const user=result.data
@@ -123,7 +120,7 @@
           //显示新的图片验证码
           this.getCaptcha()
           //显示警告提示
-        const msg = result.msg
+          const msg = result.msg
 
           this.showAlert(msg)
 
@@ -138,7 +135,7 @@
       getCaptcha(){
         //每次指定的src要不一样
         // TODO
-        this.$refs.captcha.src='http://server.nsloop.com:17882/users?time='+Date.now()
+        this.$refs.captcha.src=api+'users?time='+Date.now()
       }
     },
 

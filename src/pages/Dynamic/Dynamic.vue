@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <HeaderTop/>
@@ -18,7 +17,8 @@
             <div class="user_line">
               <div class="user_line_wrap">
                 <!--<span class="portrait"><img :src="worl.Cuser['avatar']" alt=""></span>-->
-                <router-link class="portrait" :to="{path:'/homepage',query:{id:worl.Cuser['id']}}"><img :src="worl.Cuser['avatar']" alt=""></router-link>
+                <router-link class="portrait" :to="{path:'/homepage',query:{id:worl.Cuser['id']}}"><img
+                  :src="worl.Cuser['avatar']" alt=""></router-link>
                 <div class="content">
                   <h4 class="title">{{worl.Cuser['nickname']}}</h4>
                   <div class="sub_title">
@@ -28,31 +28,33 @@
               </div>
             </div>
             <!--内容-->
-            <div class="main_context">
+
+            <router-link :to="{path:'/detail'}" class="main_context">
               <p class="forum_title"></p>
               <p class="forum_sub_title1">{{worl.content}}</p>
               <div class="sudoku" style="width: 349px">
                 <div class="sudoku_wrap">
                   <!--<ul id="list">-->
-                    <!--<li  :key="index">-->
+                  <!--<li  :key="index">-->
                   <!--<span class="img_item" style="width: 108.333px;height: 108.333px;">-->
-                    <!--<img :src="pic" alt="">-->
-    <viewer  class="img_item" >
-            <img  v-for="(pic, index) in worl.worldimages_set" :src="pic" :key="index" >
-        </viewer>
+                  <!--<img :src="pic" alt="">-->
+                  <viewer class="img_item">
+                    <img v-for="(pic, index) in worl.worldimages_set" :src="pic" :key="index">
+                  </viewer>
                   <!--</span>-->
-                    <!--</li>-->
+                  <!--</li>-->
                   <!--</ul>-->
                 </div>
               </div>
-            </div>
-            <div class="interaction" >
+            </router-link>
+            <div class="interaction">
               <div class="wrap">
-                <span class="left">zan</span>
-                <span class="right">liuyan</span>
+                <span class="left"><i class="iconfont icon-zan"></i></span>
+                <span class="right"><i class="iconfont icon-comments"></i></span>
               </div>
               <!--<hr style="color: #eee">-->
             </div>
+
           </div>
         </li>
 
@@ -69,7 +71,6 @@
   import 'mescroll.js/mescroll.min.css'
   import Vue from 'vue'
 
-
   // new BScroll('.msite_content_wrapper')
   export default {
     data () {
@@ -77,11 +78,15 @@
         mescroll: null, // mescroll实例对象
         dataList: [], // 列表数据
         isEdit: false, // 是否获取编辑的列表数据
-
+        isFirstEnter: false // 是否第一次进入，默认false
       }
     },
 
+    created () {
+
+    },
     mounted: function () {
+
       // 创建MeScroll对象
       this.mescroll = new MeScroll(this.$refs.mescroll, { // 在vue的mounted生命周期初始化mescroll,确保此处配置的ref有值
         up: {
@@ -102,22 +107,21 @@
       })
     },
 
-
     methods: {
+
       // 上拉回调 page = {num:1, size:10}; num:当前页 ,默认从1开始; size:每页数据条数,默认10
 
       //上拉加载的回调 page = {num:1, size:10}; num:当前页 默认从1开始, size:每页数据条数,默认10
-      upCallback(page) {
-        var pageNum = page.num; // 页码, 默认从1开始 如何修改从0开始 ?
-        var pageSize = page.size; // 页长, 默认每页10条
-        this.$axios('http://server.nsloop.com:17882/world/?page=' + pageNum + "&page_size=" + pageSize).then(data => {
+      upCallback (page) {
+        var pageNum = page.num // 页码, 默认从1开始 如何修改从0开始 ?
+        var pageSize = page.size // 页长, 默认每页10条
+        this.$axios(api + 'world/?page=' + pageNum + '&page_size=' + pageSize).then(data => {
 
-          var curPageData = data.data.results; // 接口返回的当前页数据列表
+          var curPageData = data.data.results // 接口返回的当前页数据列表
 
-
-          var totalPage = data['data']['count']/pageSize+1; // 接口返回的总页数 (比如列表有26个数据,每页10条,共3页; 则totalPage值为3)
+          var totalPage = data['data']['count'] / pageSize + 1 // 接口返回的总页数 (比如列表有26个数据,每页10条,共3页; 则totalPage值为3)
           var totalSize = data['data']['count'] // 接口返回的总数据量(比如列表有26个数据,每页10条,共3页; 则totalSize值为26)
-          var hasNext = data.data.next; // 接口返回的是否有下一页 (true/false)
+          var hasNext = data.data.next // 接口返回的是否有下一页 (true/false)
 
           //联网成功的回调,隐藏下拉刷新和上拉加载的状态;
           //mescroll会根据传的参数,自动判断列表如果无任何数据,则提示空,显示empty配置的内容;
@@ -125,28 +129,7 @@
 
           //方法一(推荐): 后台接口有返回列表的总页数 totalPage
           //必传参数(当前页的数据个数, 总页数)
-          this.mescroll.endByPage(curPageData.length, totalPage);
-
-          //方法二(推荐): 后台接口有返回列表的总数据量 totalSize
-          //必传参数(当前页的数据个数, 总数据量)
-          //mescroll.endBySize(curPageData.length, totalSize);
-
-          //方法三(推荐): 您有其他方式知道是否有下一页 hasNext
-          //必传参数(当前页的数据个数, 是否有下一页true/false)
-          //mescroll.endSuccess(curPageData.length, hasNext);
-
-          //方法四 (不推荐),会存在一个小问题:比如列表共有20条数据,每页加载10条,共2页.
-          //如果只根据当前页的数据个数判断,则需翻到第三页才会知道无更多数据
-          //如果传了hasNext,则翻到第二页即可显示无更多数据.
-          //mescroll.endSuccess(curPageData.length);
-
-          //结束下拉刷新的 mescroll.endSuccess()无参.
-          //结束上拉加载 curPageData.length必传的原因:
-          // 1.使配置的noMoreSize 和 empty生效
-          // 2.判断是否有下一页的首要依据: 当传的值小于page.size时,则一定会认为无更多数据.
-          //   比传入的totalPage, totalSize, hasNext具有更高的判断优先级
-          // 3.当传的值等于page.size时,才会取totalPage, totalSize, hasNext判断是否有下一页
-          // 传totalPage, totalSize, hasNext主要目的是避免方法四描述的小问题
+          this.mescroll.endByPage(curPageData.length, totalPage)
 
           //设置列表数据
           //setListData(curPageData);//自行实现 TODO
@@ -155,35 +138,13 @@
 
           }
           this.dataList = this.dataList.concat(curPageData)
-        }).catch(e=> {
+        }).catch(e => {
 
           //联网失败的回调,隐藏下拉刷新和上拉加载的状态
-          this.mescroll.endErr();
+          this.mescroll.endErr()
 
-        });
+        })
       },
-
-
-      // upCallback (page) {
-      //       // 模拟联网
-      //       this.getListDataFromNet(this.pdType, page.num, page.size, (arr) => {
-      //         // 如果是第一页需手动制空列表
-      //         if (page.num === 1) this.dataList = []
-      //         // 把请求到的数据添加到列表
-      //         this.dataList = this.dataList.concat(arr)
-      //         // 数据渲染成功后,隐藏下拉刷新的状态
-      //         this.$nextTick(() => {
-      //           this.mescroll.endSuccess(arr.length)
-      //         })
-      //       }, () => {
-      //         this.mescroll.endErr()
-      //       })
-      //     },
-      /* 联网加载列表数据
-       * 在您的实际项目中,请参考官方写法: http://www.mescroll.com/api.html#tagUpCallback
-       * 请忽略getListDataFromNet的逻辑,这里仅仅是在本地模拟分页数据,本地演示用
-       * 实际项目以您服务器接口返回的数据为准,无需本地处理分页.
-       */
 
     },
 
@@ -202,6 +163,7 @@
           }
         }
       })
+
     },
     // 离开路由时,记录列表状态
     beforeRouteLeave (to, from, next) {  // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写
@@ -213,20 +175,20 @@
       }
       next()
 
-
     },
 
     computed: {
       ...mapState(['world'])
     },
-    watch:{
-      world(value){
-        this.$nextTick(()=>{//列表数据更新显示后执行
+    watch: {
+      world (value) {
+        this.$nextTick(() => {//列表数据更新显示后执行
           //列表显示后创建
           new BScroll('.msite_content_wrapper')
         })
       }
     },
+
     components: {
       HeaderTop,
     }
@@ -244,45 +206,55 @@
     height: auto;
     width 102%
   }
-  .mescroll-totop{
+
+  .mescroll-totop {
     right: 5px;
     bottom: 55px;
   }
+
   body {
     font-size: 14px;
 
   }
+
   div {
     display: block;
   }
+
   h4, p {
     margin: 0;
     padding: 0;
   }
+
   img {
     border-style: none;
   }
+
   .msite_content_wrapper {
     position fixed
     top: 45px
     bottom: 46px
     width: 100%
   }
+
   .forum_card {
-    padding-top: 30px;
+    padding-top: 20px;
     /*padding-bottom: 10px;*/
     border 1px solid #eeeeee
   }
+
   /*用户信息*/
   .user_line {
     margin: 0 17px;
   }
+
   .user_line_wrap {
     position: relative;
     text-decoration: none;
     width: 100%;
     display: flex;
   }
+
   .user_line_wrap > .portrait > img {
     position: relative;
     display: inline-block;
@@ -292,19 +264,23 @@
     background-size: cover;
     border-radius: 50%;
   }
+
   .content {
     text-align: left;
   }
+
   .content > .title {
     margin-bottom: 4px;
     font-size: 14px;
     color: #333;
     font-weight: 400;
   }
+
   .sub_title {
     font-size: 12px;
     color: #999;
   }
+
   /*内容*/
   .main_context .forum_title {
     line-height: 24px;
@@ -313,6 +289,7 @@
     text-align: left;
     color: #000;
   }
+
   .main_context .forum_sub_title1 {
     line-height: 20px;
     font-size: 16px;
@@ -326,19 +303,22 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
   }
+
   .sudoku {
     position: relative;
     margin: 0 17px;
   }
+
   /*.sudoku_wrap {
     display: flex;
     flex-flow: row nowrap;
   }*/
-  #list{
+  #list {
     text-align center
     width: 349px
   }
-  #list>li{
+
+  #list > li {
     float: left;
     display: block;
     margin-right: 8px;
@@ -346,20 +326,23 @@
     height: 108.333px;
     margin-top: 10px;
   }
+
   .sudoku .img_item {
     display: block;
     background-size: cover;
     margin-top: 9px;
 
   }
+
   .sudoku .img_item img {
     width: 108.333px;
     height: 108.333px;
     object-fit: cover;
     display inline-block
-    margin-right  8px
+    margin-right 8px
     margin-top 5px
   }
+
   /*底部*/
   .wrap {
     width: 100%;
@@ -367,15 +350,18 @@
     overflow: hidden
     padding-bottom: 10px;
   }
+
   .left {
     margin-left: 20px;
     float: left;
   }
+
   .right {
     margin-right: 20px;
     float: right;
   }
-  .mescroll-upwarp{
+
+  .mescroll-upwarp {
     min-height 60px
   }
 </style>

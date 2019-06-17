@@ -9,6 +9,8 @@ Description 发布动态
     <mt-field  v-model="dynamicContent" placeholder="发表您的动态" type="textarea" rows="4" ></mt-field>
 
     <uploader @getFiles='getImageList' @removeFiles='removeImage'></uploader>
+    <div v-if="this.$route.query.type===1"><input v-model="is_anonymity" name="niming" type="checkbox" value="匿名"/>匿名</div>
+
     <div class="btn-wrapper">
         <mt-button v-show="!loading" class='btn-send' size="large" type="primary" @click="send">发布</mt-button>
       <br>
@@ -26,6 +28,8 @@ export default {
   name: "DynamicCreate",
   data() {
     return {
+      is_anonymity:1,
+      type: this.$route.query.type,
       loading:false,
       dynamicContent: "", //动态内容
       imgList: [], //已上传的图片集合
@@ -111,8 +115,9 @@ export default {
       // 重要
       this.loading=true
       let formData = new FormData();
-      formData.append('type',  2);
+      formData.append('type',this.type?this.type:2);
       formData.append('content', this.dynamicContent);
+      formData.append('is_anonymity', this.is_anonymity?this.is_anonymity:0);
       for(var i=0;i<this.imgList.length;i++){
         formData.append('images', this.imgList[i]);
       }
@@ -146,7 +151,7 @@ export default {
           // qs.stringify(data)
     }).then(response=> {
         if (response.status===200){
-          this.$router.push('/dynamic')
+          this.$router.go(-1)
         }
       }) .catch(function (error) {
         console.log(error);
