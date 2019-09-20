@@ -134,7 +134,7 @@ export default {
       // console.log(postData)
       this.$axios({
         method: "post",
-        url: "http://server.nsloop.com:17882/circle/",
+        url: api+'circle/',
         headers: {
           'Content-type': 'application/x-www-form-urlencoded'
         },

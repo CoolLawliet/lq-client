@@ -82,7 +82,11 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
-      }
+      },
+      // {
+      //   test:require.resolve("some-module"),
+      //   use:"imports-loader?this=>window"
+      // }
     ]
   },
   node: {

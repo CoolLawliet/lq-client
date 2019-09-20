@@ -167,7 +167,7 @@
           var totalPage = data['data']['results']['count'] / pageSize + 1 // 接口返回的总页数 (比如列表有26个数据,每页10条,共3页; 则totalPage值为3)
           var totalSize = data['data']['results']['count'] // 接口返回的总数据量(比如列表有26个数据,每页10条,共3页; 则totalSize值为26)
           var hasNext = data.data.results.next // 接口返回的是否有下一页 (true/false)
-
+          console.log(data)
           //联网成功的回调,隐藏下拉刷新和上拉加载的状态;
           //mescroll会根据传的参数,自动判断列表如果无任何数据,则提示空,显示empty配置的内容;
           //列表如果无下一页数据,则提示无更多数据,(注意noMoreSize的配置)

@@ -3,19 +3,7 @@
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Msite from '../pages/Msite/Msite.vue'
-import Dynamic from '../pages/Dynamic/Dynamic.vue'
-import Circle from '../pages/Circle/Circle.vue'
-import Profile from '../pages/Profile/Profile.vue'
-import Login from '../pages/Login/Login.vue'
-import Publish from '../pages/Publish/Publish.vue'
-import PostBar from '../pages/PostBar/PostBar.vue'
-import Attention from '../pages/Msite/Attention/Attention'
-import MsiteContent from '../pages/Msite/MsiteContent/MsiteContent'
-import HomePage from '../pages/HomePage/HomePage'
-import Viewerx from '../pages/HomePage/Viewerx/Viewerx'
-import Confess from '../pages/Msite/Confess/Confess'
-import Detail from '../pages/Detail/Detail'
+
 
 //声明使用插件
 Vue.use(VueRouter)
@@ -27,13 +15,11 @@ const router = new VueRouter({
   routes: [
     {
       path: '/msite',
-      name: 'msite',
-      component: Msite,
+      component: ()=>import('../pages/Msite/Msite.vue'),
       children: [
         {
           path: 'msitecontent',
-          name: 'msitecontent',
-          component: MsiteContent,
+          component: ()=>import('../pages/Msite/MsiteContent/MsiteContent'),
           meta: {
             showFooter: true,
             keepAlive: true,
@@ -42,8 +28,7 @@ const router = new VueRouter({
         },
         {
           path: 'attention',
-          name: 'attention',
-          component: Attention,
+          component: ()=>import('../pages/Msite/Attention/Attention'),
           meta: {
             showFooter: true,
             keepAlive: true,
@@ -52,8 +37,7 @@ const router = new VueRouter({
         },
         {
           path: 'confess',
-          name: 'confess',
-          component: Confess,
+          component: ()=>import('../pages/Msite/Confess/Confess'),
           meta: {
             showFooter: true,
             keepAlive: true,
@@ -69,8 +53,7 @@ const router = new VueRouter({
     },
     {
       path: '/dynamic',
-      name: 'dynamic',
-      component: Dynamic,
+      component: ()=>import('../pages/Dynamic/Dynamic.vue'),
       meta: {
         showFooter: true,
         keepAlive: true,
@@ -78,16 +61,14 @@ const router = new VueRouter({
     },
     {
       path: '/circle',
-      name: 'circle',
-      component: Circle,
+      component: ()=>import('../pages/Circle/Circle.vue'),
       meta: {
         showFooter: true
       }
     },
     {
       path: '/profile',
-      name: 'profile',
-      component: Profile,
+      component: ()=>import('../pages/Profile/Profile.vue'),
       meta: {
         showFooter: true
       }
@@ -99,39 +80,33 @@ const router = new VueRouter({
     // },
     {
       path: '/login',
-      name: 'login',
-      component: Login
+      component: ()=>import('../pages/Login/Login.vue')
     },
     {
       path: '/publish',
-      name: 'publish',
-      component: Publish
+      component: ()=>import('../pages/Publish/Publish.vue')
     },
     {
       path: '/postbar',
-      name: 'postbar',
-      component: PostBar
+      component: ()=>import('../pages/PostBar/PostBar.vue')
     },
     {
       path: '/homepage',
-      name: 'homepage',
-      component: HomePage,
+      component: ()=>import('../pages/HomePage/HomePage'),
       meta:{
         keepAlive: true,
       }
     },
     {
       path: '/viewerx',
-      name: 'viewerx',
-      component:Viewerx,
+      component:()=>import('../pages/HomePage/Viewerx/Viewerx'),
       meta:{
         keepAlive: true
       }
     },
     {
       path:'/detail',
-      name:'detail',
-      component:Detail,
+      component:()=>import('../pages/Detail/Detail'),
     }
   ]
 })
@@ -158,7 +133,6 @@ router.beforeEach((to, from, next) => {
     if (token === 'null' || token === '') {
       next('/login')
     } else {
-
       next()
     }
   }

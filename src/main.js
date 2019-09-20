@@ -13,7 +13,9 @@ import Viewer from 'v-viewer'
 import 'viewerjs/dist/viewer.css'
 import '../host.js'
 import Mui from 'vue-awesome-mui';
+
 Vue.use(Mui);
+
 
 Vue.use(Viewer);
 Viewer.setDefaults({

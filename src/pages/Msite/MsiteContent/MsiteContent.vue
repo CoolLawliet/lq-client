@@ -5,12 +5,6 @@
     <div ref="mescroll" class="mescroll" style="top: 85px;">
       <!--展示上拉加载的数据列表-->
       <ul id="dataList" class="data-list">
-        <!--<li v-for="pd in dataList" :key="pd.id">-->
-        <!--<img class="pd-img" :imgurl="pd.pdImg" src="../../../static/mock/img/loading.png"/>-->
-        <!--<p class="pd-name">{{pd.pdName}}</p>-->
-        <!--<p class="pd-price">{{pd.pdPrice}} 元</p>-->
-        <!--<p class="pd-sold">已售{{pd.pdSold}}件</p>-->
-        <!--</li>-->
         <li v-for="(worl, index) in dataList" :key="index">
           <div class="forum_card">
             <!--用户信息-->
@@ -33,16 +27,9 @@
               <p class="forum_sub_title" >{{worl.content}}</p>
               <div class="sudoku" style="width: 349px">
                 <div class="sudoku_wrap">
-                  <!--<ul id="list">-->
-                  <!--<li  :key="index">-->
-                  <!--<span class="img_item" style="width: 108.333px;height: 108.333px;">-->
-                  <!--<img :src="pic" alt="">-->
                   <viewer  class="img_item" >
                     <img  v-for="(pic, index) in worl.worldimages_set" :src="pic" :key="index" >
                   </viewer>
-                  <!--</span>-->
-                  <!--</li>-->
-                  <!--</ul>-->
                 </div>
               </div>
             </div>

@@ -8,13 +8,13 @@
   </HeaderTop>
   <div class="tab">
     <div class="tab-item">
-      <router-link to="/msite/msitecontent" replace>首页</router-link>
+      <router-link to="/msite/msitecontent" >首页</router-link>
     </div>
     <div class="tab-item">
-      <router-link to="/msite/attention" replace>关注</router-link>
+      <router-link to="/msite/attention" >关注</router-link>
     </div>
     <div class="tab-item">
-      <router-link to="/msite/confess" replace>表白</router-link>
+      <router-link to="/msite/confess" >表白</router-link>
     </div>
   </div>
   <keep-alive>

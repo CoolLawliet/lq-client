@@ -17,13 +17,13 @@
         <i class="iconfont icon-roundadd" style="font-size: 33px"></i>
       </span>
     </router-link>
-    <router-link class="guide_item"active-class="guide_item on" :to="{path:'/circle'}">
+    <router-link class="guide_item" active-class="guide_item on" :to="{path:'/circle'}">
       <span class="item_icon">
         <i class="iconfont icon-zhinengyouhua"></i>
       </span>
       <span>圈圈</span>
     </router-link>
-    <router-link class="guide_item"active-class="guide_item on"  :to="{path:'/profile'}">
+    <router-link class="guide_item" active-class="guide_item on"  :to="{path:'/profile'}">
       <span class="item_icon">
         <i class="iconfont icon-geren"></i>
       </span>
